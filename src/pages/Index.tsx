@@ -39,7 +39,7 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <StockChart className="lg:col-span-2 animate-fade-in" symbol={selectedStock} />
           <div className="space-y-6">
-            <MarketSentiment className="animate-fade-in [animation-delay:100ms]" />
+            <MarketSentiment />
             <StockStats className="animate-fade-in [animation-delay:200ms]" symbol={selectedStock} />
           </div>
         </div>
