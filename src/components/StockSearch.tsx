@@ -26,6 +26,13 @@ const stocks = [
   { value: "TSLA", label: "Tesla Inc." },
   { value: "NVDA", label: "NVIDIA Corporation" },
   { value: "JPM", label: "JPMorgan Chase & Co." },
+  { value: "V", label: "Visa Inc." },
+  { value: "WMT", label: "Walmart Inc." },
+  { value: "PG", label: "Procter & Gamble Co." },
+  { value: "JNJ", label: "Johnson & Johnson" },
+  { value: "UNH", label: "UnitedHealth Group Inc." },
+  { value: "HD", label: "The Home Depot Inc." },
+  { value: "BAC", label: "Bank of America Corp." }
 ];
 
 interface StockSearchProps {
