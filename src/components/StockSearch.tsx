@@ -35,6 +35,12 @@ export function StockSearch({ onSelect }: StockSearchProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
+  const handleSelect = React.useCallback((currentValue: string) => {
+    setValue(currentValue);
+    onSelect(currentValue);
+    setOpen(false);
+  }, [onSelect]);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -55,16 +61,12 @@ export function StockSearch({ onSelect }: StockSearchProps) {
         <Command>
           <CommandInput placeholder="Search stocks..." className="h-9 border-none bg-transparent" />
           <CommandEmpty>No stock found.</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup heading="Suggestions">
             {stocks.map((stock) => (
               <CommandItem
                 key={stock.value}
                 value={stock.value}
-                onSelect={(currentValue) => {
-                  setValue(currentValue);
-                  onSelect(currentValue);
-                  setOpen(false);
-                }}
+                onSelect={handleSelect}
                 className="hover:bg-slate-800/50"
               >
                 <Check
