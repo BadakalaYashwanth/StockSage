@@ -36,6 +36,74 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_prices: {
+        Row: {
+          close_price: number
+          created_at: string | null
+          date: string
+          high_price: number
+          id: number
+          low_price: number
+          open_price: number
+          stock_id: number | null
+          volume: number
+        }
+        Insert: {
+          close_price: number
+          created_at?: string | null
+          date: string
+          high_price: number
+          id?: number
+          low_price: number
+          open_price: number
+          stock_id?: number | null
+          volume: number
+        }
+        Update: {
+          close_price?: number
+          created_at?: string | null
+          date?: string
+          high_price?: number
+          id?: number
+          low_price?: number
+          open_price?: number
+          stock_id?: number | null
+          volume?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_prices_stock_id_fkey"
+            columns: ["stock_id"]
+            isOneToOne: false
+            referencedRelation: "stocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stocks: {
+        Row: {
+          company_name: string
+          created_at: string | null
+          id: number
+          sector: string | null
+          symbol: string
+        }
+        Insert: {
+          company_name: string
+          created_at?: string | null
+          id?: number
+          sector?: string | null
+          symbol: string
+        }
+        Update: {
+          company_name?: string
+          created_at?: string | null
+          id?: number
+          sector?: string | null
+          symbol?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
