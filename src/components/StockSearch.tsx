@@ -9,6 +9,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -59,27 +60,29 @@ export function StockSearch({ onSelect }: StockSearchProps) {
       </PopoverTrigger>
       <PopoverContent className="w-full md:w-[250px] p-0 bg-slate-900/95 border-slate-800 text-slate-200 backdrop-blur-xl">
         <Command>
-          <CommandInput placeholder="Search stocks..." className="h-9 border-none bg-transparent" />
-          <CommandEmpty>No stock found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            {stocks.map((stock) => (
-              <CommandItem
-                key={stock.value}
-                value={stock.value}
-                onSelect={handleSelect}
-                className="hover:bg-slate-800/50"
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === stock.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                <span className="font-medium">{stock.value}</span>
-                <span className="ml-2 text-slate-400">{stock.label}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <CommandInput placeholder="Search stocks..." />
+          <CommandList>
+            <CommandEmpty>No stock found.</CommandEmpty>
+            <CommandGroup>
+              {stocks.map((stock) => (
+                <CommandItem
+                  key={stock.value}
+                  value={stock.value}
+                  onSelect={handleSelect}
+                  className="hover:bg-slate-800/50"
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === stock.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  <span className="font-medium">{stock.value}</span>
+                  <span className="ml-2 text-slate-400">{stock.label}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
