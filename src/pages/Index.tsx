@@ -4,6 +4,8 @@ import { StockChart } from "@/components/StockChart";
 import { MarketSentiment } from "@/components/MarketSentiment";
 import { StockStats } from "@/components/StockStats";
 import { StockSearch } from "@/components/StockSearch";
+import { TechnicalAnalysis } from "@/components/TechnicalAnalysis";
+import { PortfolioManager } from "@/components/PortfolioManager";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -37,10 +39,14 @@ const Index = () => {
         </header>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <StockChart className="lg:col-span-2 animate-fade-in" symbol={selectedStock} />
+          <div className="lg:col-span-2 space-y-6">
+            <StockChart className="animate-fade-in" symbol={selectedStock} />
+            <TechnicalAnalysis className="animate-fade-in" symbol={selectedStock} />
+          </div>
           <div className="space-y-6">
             <MarketSentiment />
             <StockStats className="animate-fade-in [animation-delay:200ms]" symbol={selectedStock} />
+            <PortfolioManager className="animate-fade-in [animation-delay:400ms]" symbol={selectedStock} />
           </div>
         </div>
       </div>
