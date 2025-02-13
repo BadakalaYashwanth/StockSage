@@ -10,26 +10,31 @@ interface StatItemProps {
 
 const StatItem = ({ label, value }: StatItemProps) => (
   <div className="flex justify-between items-center py-2">
-    <span className="text-sm text-muted-foreground">{label}</span>
-    <span className="font-mono font-medium">{value}</span>
+    <span className="text-sm text-slate-400">{label}</span>
+    <span className="font-mono font-medium text-slate-200">{value}</span>
   </div>
 );
 
-export const StockStats = () => {
+interface StockStatsProps {
+  className?: string;
+  symbol: string;
+}
+
+export const StockStats = ({ className, symbol }: StockStatsProps) => {
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">Key Statistics</h3>
+    <Card className={`p-6 glass-card ${className}`}>
+      <h3 className="text-lg font-semibold mb-4">{symbol} Key Statistics</h3>
       <div className="space-y-2">
         <StatItem label="Market Cap" value="$2.53T" />
-        <Separator />
+        <Separator className="bg-slate-800" />
         <StatItem label="P/E Ratio" value="27.34" />
-        <Separator />
+        <Separator className="bg-slate-800" />
         <StatItem label="52W High" value="$198.23" />
-        <Separator />
+        <Separator className="bg-slate-800" />
         <StatItem label="52W Low" value="$124.17" />
-        <Separator />
+        <Separator className="bg-slate-800" />
         <StatItem label="Volume" value="64.23M" />
-        <Separator />
+        <Separator className="bg-slate-800" />
         <StatItem label="Avg Volume" value="57.85M" />
       </div>
     </Card>

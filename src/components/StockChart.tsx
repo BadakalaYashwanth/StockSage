@@ -3,29 +3,41 @@ import React from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Card } from './ui/card';
 
-const dummyData = [
-  { date: '2024-01', price: 150 },
-  { date: '2024-02', price: 180 },
-  { date: '2024-03', price: 160 },
-  { date: '2024-04', price: 200 },
-  { date: '2024-05', price: 190 },
-  { date: '2024-06', price: 220 },
-];
+const generateDummyData = (symbol: string) => {
+  const basePrice = {
+    'AAPL': 150,
+    'MSFT': 250,
+    'GOOGL': 120,
+    'AMZN': 100,
+    'META': 200,
+    'TSLA': 180,
+    'NVDA': 400,
+    'JPM': 140,
+  }[symbol] || 100;
+
+  return Array.from({ length: 6 }, (_, i) => ({
+    date: `2024-${String(i + 1).padStart(2, '0')}`,
+    price: basePrice + Math.random() * 50 - 25,
+  }));
+};
 
 interface StockChartProps {
   className?: string;
+  symbol: string;
 }
 
-export const StockChart = ({ className }: StockChartProps) => {
+export const StockChart = ({ className, symbol }: StockChartProps) => {
+  const data = generateDummyData(symbol);
+
   return (
-    <Card className={`p-6 ${className}`}>
+    <Card className={`p-6 glass-card ${className}`}>
       <div className="mb-4">
-        <h3 className="text-lg font-semibold">AAPL Stock Price</h3>
-        <p className="text-sm text-muted-foreground">Last 6 months performance</p>
+        <h3 className="text-lg font-semibold">{symbol} Stock Price</h3>
+        <p className="text-sm text-slate-400">Last 6 months performance</p>
       </div>
       <div className="h-[400px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={dummyData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10B981" stopOpacity={0.8} />
@@ -34,24 +46,24 @@ export const StockChart = ({ className }: StockChartProps) => {
             </defs>
             <XAxis 
               dataKey="date"
-              tick={{ fill: '#64748B' }}
-              tickLine={{ stroke: '#64748B' }}
+              tick={{ fill: '#94A3B8' }}
+              tickLine={{ stroke: '#94A3B8' }}
             />
             <YAxis 
-              tick={{ fill: '#64748B' }}
-              tickLine={{ stroke: '#64748B' }}
+              tick={{ fill: '#94A3B8' }}
+              tickLine={{ stroke: '#94A3B8' }}
               tickFormatter={(value) => `$${value}`}
             />
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1E293B',
-                border: '1px solid #334155',
+                backgroundColor: '#0F172A',
+                border: '1px solid #1E293B',
                 borderRadius: '6px',
               }}
               labelStyle={{ color: '#F8FAFC' }}
               itemStyle={{ color: '#F8FAFC' }}
-              formatter={(value: number) => [`$${value}`, 'Price']}
+              formatter={(value: number) => [`$${value.toFixed(2)}`, 'Price']}
             />
             <Area
               type="monotone"
