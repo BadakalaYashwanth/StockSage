@@ -31,7 +31,7 @@ interface StockPrice {
 }
 
 export const StockStats = ({ className, symbol }: StockStatsProps) => {
-  const { data: latestPrice } = useQuery({
+  const { data: latestPrice, isLoading, error } = useQuery({
     queryKey: ['latestPrice', symbol],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -39,10 +39,10 @@ export const StockStats = ({ className, symbol }: StockStatsProps) => {
         .select('open_price, close_price, high_price, low_price, volume')
         .order('date', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return data as StockPrice;
+      return data as StockPrice | null;
     },
   });
 
@@ -62,19 +62,54 @@ export const StockStats = ({ className, symbol }: StockStatsProps) => {
 
   const change = calculateChange();
 
+  if (isLoading) {
+    return (
+      <Card className={`p-6 glass-card ${className}`}>
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-slate-700 rounded w-1/3"></div>
+          <div className="space-y-2">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-4 bg-slate-700 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className={`p-6 glass-card ${className}`}>
+        <div className="text-red-400">
+          <h3 className="text-lg font-semibold mb-2">Error Loading Stats</h3>
+          <p className="text-sm">Unable to fetch stock statistics.</p>
+        </div>
+      </Card>
+    );
+  }
+
+  if (!latestPrice) {
+    return (
+      <Card className={`p-6 glass-card ${className}`}>
+        <h3 className="text-lg font-semibold mb-4">{symbol} Key Statistics</h3>
+        <p className="text-slate-400 text-sm">No data available for this stock.</p>
+      </Card>
+    );
+  }
+
   return (
     <Card className={`p-6 glass-card ${className}`}>
       <h3 className="text-lg font-semibold mb-4">{symbol} Key Statistics</h3>
       <div className="space-y-2">
-        <StatItem label="Open" value={formatPrice(latestPrice?.open_price)} />
+        <StatItem label="Open" value={formatPrice(latestPrice.open_price)} />
         <Separator className="bg-slate-800" />
-        <StatItem label="Close" value={formatPrice(latestPrice?.close_price)} />
+        <StatItem label="Close" value={formatPrice(latestPrice.close_price)} />
         <Separator className="bg-slate-800" />
-        <StatItem label="High" value={formatPrice(latestPrice?.high_price)} />
+        <StatItem label="High" value={formatPrice(latestPrice.high_price)} />
         <Separator className="bg-slate-800" />
-        <StatItem label="Low" value={formatPrice(latestPrice?.low_price)} />
+        <StatItem label="Low" value={formatPrice(latestPrice.low_price)} />
         <Separator className="bg-slate-800" />
-        <StatItem label="Volume" value={formatVolume(latestPrice?.volume)} />
+        <StatItem label="Volume" value={formatVolume(latestPrice.volume)} />
         <Separator className="bg-slate-800" />
         <div className="flex justify-between items-center py-2">
           <span className="text-sm text-slate-400">Change</span>
