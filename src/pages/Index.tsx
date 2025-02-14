@@ -9,6 +9,8 @@ import { PortfolioManager } from "@/components/PortfolioManager";
 import { UserProfile } from "@/components/UserProfile";
 import { RiskManagement } from "@/components/RiskManagement";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
+import { FinancialPlanner } from "@/components/FinancialPlanner";
+import { CommunityDiscussion } from "@/components/CommunityDiscussion";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -46,12 +48,14 @@ const Index = () => {
             <StockChart className="animate-fade-in" symbol={selectedStock} />
             <TechnicalAnalysis className="animate-fade-in" symbol={selectedStock} />
             <MarketAnalysis symbol={selectedStock} />
+            <CommunityDiscussion symbol={selectedStock} />
           </div>
           <div className="space-y-6">
             <MarketSentiment />
             <StockStats className="animate-fade-in [animation-delay:200ms]" symbol={selectedStock} />
             <PortfolioManager className="animate-fade-in [animation-delay:400ms]" symbol={selectedStock} />
             <RiskManagement symbol={selectedStock} />
+            <FinancialPlanner />
             <UserProfile />
           </div>
         </div>
