@@ -8,6 +8,7 @@ import { TechnicalAnalysis } from "@/components/TechnicalAnalysis";
 import { PortfolioManager } from "@/components/PortfolioManager";
 import { UserProfile } from "@/components/UserProfile";
 import { RiskManagement } from "@/components/RiskManagement";
+import { MarketAnalysis } from "@/components/MarketAnalysis";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -44,6 +45,7 @@ const Index = () => {
           <div className="lg:col-span-2 space-y-6">
             <StockChart className="animate-fade-in" symbol={selectedStock} />
             <TechnicalAnalysis className="animate-fade-in" symbol={selectedStock} />
+            <MarketAnalysis symbol={selectedStock} />
           </div>
           <div className="space-y-6">
             <MarketSentiment />
