@@ -11,6 +11,7 @@ import { RiskManagement } from "@/components/RiskManagement";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
 import { FinancialPlanner } from "@/components/FinancialPlanner";
 import { CommunityDiscussion } from "@/components/CommunityDiscussion";
+import { EconomicCalendar } from "@/components/EconomicCalendar";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -55,6 +56,7 @@ const Index = () => {
             <StockStats className="animate-fade-in [animation-delay:200ms]" symbol={selectedStock} />
             <PortfolioManager className="animate-fade-in [animation-delay:400ms]" symbol={selectedStock} />
             <RiskManagement symbol={selectedStock} />
+            <EconomicCalendar />
             <FinancialPlanner />
             <UserProfile />
           </div>
