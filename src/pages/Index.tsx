@@ -12,6 +12,8 @@ import { MarketAnalysis } from "@/components/MarketAnalysis";
 import { FinancialPlanner } from "@/components/FinancialPlanner";
 import { CommunityDiscussion } from "@/components/CommunityDiscussion";
 import { EconomicCalendar } from "@/components/EconomicCalendar";
+import { NewsIntegration } from "@/components/NewsIntegration";
+import { MarketScreener } from "@/components/MarketScreener";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -49,6 +51,8 @@ const Index = () => {
             <StockChart className="animate-fade-in" symbol={selectedStock} />
             <TechnicalAnalysis className="animate-fade-in" symbol={selectedStock} />
             <MarketAnalysis symbol={selectedStock} />
+            <NewsIntegration symbol={selectedStock} />
+            <MarketScreener />
             <CommunityDiscussion symbol={selectedStock} />
           </div>
           <div className="space-y-6">
