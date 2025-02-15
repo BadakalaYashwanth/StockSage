@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { StockChart } from "@/components/StockChart";
 import { MarketSentiment } from "@/components/MarketSentiment";
 import { StockStats } from "@/components/StockStats";
@@ -15,6 +16,8 @@ import { EconomicCalendar } from "@/components/EconomicCalendar";
 import { NewsIntegration } from "@/components/NewsIntegration";
 import { MarketScreener } from "@/components/MarketScreener";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Activity } from "lucide-react";
 
 const Index = () => {
   const [selectedStock, setSelectedStock] = useState("AAPL");
@@ -42,7 +45,15 @@ const Index = () => {
                 AI-Powered Stock Market Predictions
               </p>
             </div>
-            <StockSearch onSelect={handleStockSelect} />
+            <div className="flex items-center gap-4">
+              <StockSearch onSelect={handleStockSelect} />
+              <Link to="/mutual-funds">
+                <Button variant="outline" className="gap-2">
+                  <Activity className="w-4 h-4" />
+                  Mutual Funds
+                </Button>
+              </Link>
+            </div>
           </div>
         </header>
         
