@@ -7,6 +7,7 @@ import { StockStats } from "@/components/StockStats";
 import { StockSearch } from "@/components/StockSearch";
 import { TechnicalAnalysis } from "@/components/TechnicalAnalysis";
 import { PortfolioManager } from "@/components/PortfolioManager";
+import { PortfolioSummary } from "@/components/PortfolioSummary";
 import { UserProfile } from "@/components/UserProfile";
 import { RiskManagement } from "@/components/RiskManagement";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
@@ -69,6 +70,7 @@ const Index = () => {
           <div className="space-y-6">
             <MarketSentiment />
             <StockStats className="animate-fade-in [animation-delay:200ms]" symbol={selectedStock} />
+            <PortfolioSummary className="animate-fade-in [animation-delay:300ms]" />
             <PortfolioManager className="animate-fade-in [animation-delay:400ms]" symbol={selectedStock} />
             <RiskManagement symbol={selectedStock} />
             <EconomicCalendar />

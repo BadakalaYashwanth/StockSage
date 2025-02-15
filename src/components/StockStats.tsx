@@ -1,97 +1,109 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from './ui/card';
-import { Separator } from './ui/separator';
-import { TrendingUp, TrendingDown } from 'lucide-react';
-
-interface StatItemProps {
-  label: string;
-  value: string;
-  change?: {
-    value: string;
-    isPositive: boolean;
-  };
-}
-
-const StatItem = ({ label, value, change }: StatItemProps) => (
-  <div className="flex justify-between items-center py-2">
-    <span className="text-sm text-slate-400">{label}</span>
-    <div className="flex items-center gap-2">
-      <span className="font-mono font-medium text-slate-200">{value}</span>
-      {change && (
-        <span className={`flex items-center text-sm ${change.isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {change.isPositive ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-          {change.value}
-        </span>
-      )}
-    </div>
-  </div>
-);
+import { ReloadIcon } from '@radix-ui/react-icons';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 interface StockStatsProps {
-  className?: string;
   symbol: string;
+  className?: string;
 }
 
-export const StockStats = ({ className, symbol }: StockStatsProps) => {
-  // Simulated data - in a real app, this would come from an API
-  const generateRandomPrice = (base: number) => base + (Math.random() * 10 - 5);
-  const basePrice = {
-    'AAPL': 150, 'MSFT': 250, 'GOOGL': 120, 'AMZN': 100,
-    'META': 200, 'TSLA': 180, 'NVDA': 400, 'JPM': 140,
-    'V': 220, 'WMT': 160, 'PG': 140, 'JNJ': 170,
-    'UNH': 450, 'HD': 300, 'BAC': 35
-  }[symbol] || 100;
+export const StockStats = ({ symbol, className }: StockStatsProps) => {
+  const { data: stockData, isLoading } = useQuery({
+    queryKey: ['stock-stats', symbol],
+    queryFn: async () => {
+      const { data: stock, error: stockError } = await supabase
+        .from('stocks')
+        .select('id, company_name')
+        .eq('symbol', symbol)
+        .single();
 
-  const openPrice = generateRandomPrice(basePrice);
-  const closePrice = generateRandomPrice(basePrice);
-  const priceChange = closePrice - openPrice;
-  const percentageChange = (priceChange / openPrice) * 100;
-  const volume = Math.floor(Math.random() * 10000000) + 1000000;
-  const dayHigh = Math.max(openPrice, closePrice) + Math.random() * 2;
-  const dayLow = Math.min(openPrice, closePrice) - Math.random() * 2;
+      if (stockError) throw stockError;
+
+      const { data: latestPrice, error: priceError } = await supabase
+        .from('stock_prices')
+        .select('*')
+        .eq('stock_id', stock.id)
+        .order('date', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (priceError) throw priceError;
+
+      return {
+        ...stock,
+        currentPrice: latestPrice.close_price,
+        dayHigh: latestPrice.high_price,
+        dayLow: latestPrice.low_price,
+        volume: latestPrice.volume,
+      };
+    },
+  });
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('stock-price-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'stock_prices',
+          filter: `stock_id=eq.${stockData?.id}`,
+        },
+        (payload) => {
+          console.log('Real-time update:', payload);
+          // Invalidate the query to refresh the data
+          queryClient.invalidateQueries({ queryKey: ['stock-stats', symbol] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [symbol, stockData?.id]);
+
+  if (isLoading) {
+    return (
+      <Card className={`p-6 glass-card ${className}`}>
+        <div className="flex items-center justify-center h-32">
+          <ReloadIcon className="h-8 w-8 animate-spin" />
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className={`p-6 glass-card ${className}`}>
-      <h3 className="text-lg font-semibold mb-4">{symbol} Key Statistics</h3>
-      <div className="space-y-2">
-        <StatItem 
-          label="Open" 
-          value={`$${openPrice.toFixed(2)}`} 
-        />
-        <Separator className="bg-slate-800" />
-        <StatItem 
-          label="Close" 
-          value={`$${closePrice.toFixed(2)}`}
-          change={{
-            value: `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(2)}%`,
-            isPositive: percentageChange >= 0
-          }}
-        />
-        <Separator className="bg-slate-800" />
-        <StatItem 
-          label="Day High" 
-          value={`$${dayHigh.toFixed(2)}`} 
-        />
-        <Separator className="bg-slate-800" />
-        <StatItem 
-          label="Day Low" 
-          value={`$${dayLow.toFixed(2)}`} 
-        />
-        <Separator className="bg-slate-800" />
-        <StatItem 
-          label="Volume" 
-          value={`${(volume / 1000000).toFixed(2)}M`} 
-        />
-        <Separator className="bg-slate-800" />
-        <StatItem 
-          label="Price Change" 
-          value={`$${Math.abs(priceChange).toFixed(2)}`}
-          change={{
-            value: `${priceChange >= 0 ? '+' : '-'}$${Math.abs(priceChange).toFixed(2)}`,
-            isPositive: priceChange >= 0
-          }}
-        />
+      <div className="space-y-4">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-lg font-semibold">{symbol}</h3>
+            <p className="text-sm text-slate-400">{stockData?.company_name}</p>
+          </div>
+          <div className="text-right">
+            <div className="text-2xl font-bold">${stockData?.currentPrice.toFixed(2)}</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-slate-400">Day High</p>
+            <p className="text-lg font-semibold">${stockData?.dayHigh.toFixed(2)}</p>
+          </div>
+          <div>
+            <p className="text-sm text-slate-400">Day Low</p>
+            <p className="text-lg font-semibold">${stockData?.dayLow.toFixed(2)}</p>
+          </div>
+          <div>
+            <p className="text-sm text-slate-400">Volume</p>
+            <p className="text-lg font-semibold">
+              {stockData?.volume.toLocaleString()}
+            </p>
+          </div>
+        </div>
       </div>
     </Card>
   );
