@@ -15,7 +15,7 @@ import { CommunityDiscussion } from "@/components/CommunityDiscussion";
 import { EconomicCalendar } from "@/components/EconomicCalendar";
 import { NewsIntegration } from "@/components/NewsIntegration";
 import { MarketScreener } from "@/components/MarketScreener";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import { Button } from "@/components/ui/button";
 import { Activity } from "lucide-react";
 
