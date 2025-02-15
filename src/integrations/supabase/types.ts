@@ -36,6 +36,109 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio: {
+        Row: {
+          average_price: number
+          created_at: string | null
+          id: number
+          quantity: number
+          stock_id: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          average_price: number
+          created_at?: string | null
+          id?: number
+          quantity: number
+          stock_id?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          average_price?: number
+          created_at?: string | null
+          id?: number
+          quantity?: number
+          stock_id?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_stock_id_fkey"
+            columns: ["stock_id"]
+            isOneToOne: false
+            referencedRelation: "stocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      price_alerts: {
+        Row: {
+          alert_type: string | null
+          created_at: string | null
+          id: number
+          is_triggered: boolean | null
+          stock_id: number | null
+          target_price: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          alert_type?: string | null
+          created_at?: string | null
+          id?: number
+          is_triggered?: boolean | null
+          stock_id?: number | null
+          target_price: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string | null
+          created_at?: string | null
+          id?: number
+          is_triggered?: boolean | null
+          stock_id?: number | null
+          target_price?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_alerts_stock_id_fkey"
+            columns: ["stock_id"]
+            isOneToOne: false
+            referencedRelation: "stocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       stock_prices: {
         Row: {
           close_price: number
@@ -136,6 +239,35 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      watchlist: {
+        Row: {
+          created_at: string | null
+          id: number
+          stock_id: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          stock_id?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          stock_id?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watchlist_stock_id_fkey"
+            columns: ["stock_id"]
+            isOneToOne: false
+            referencedRelation: "stocks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
