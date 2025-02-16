@@ -18,7 +18,7 @@ import { NewsIntegration } from "@/components/NewsIntegration";
 import { MarketScreener } from "@/components/MarketScreener";
 import { useToast } from '@/hooks/use-toast';
 import { Button } from "@/components/ui/button";
-import { Activity } from "lucide-react";
+import { Activity, ChartLineUp, Wallet, Brain, Users, Calendar } from "lucide-react";
 
 const Index = () => {
   const [selectedStock, setSelectedStock] = useState("AAPL");
@@ -36,6 +36,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
       <div className="container py-8 px-4 md:px-6">
+        {/* Header Section */}
         <header className="mb-8 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -59,23 +60,66 @@ const Index = () => {
         </header>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content Area - Market Analysis & Charts */}
           <div className="lg:col-span-2 space-y-6">
-            <StockChart className="animate-fade-in" symbol={selectedStock} />
-            <TechnicalAnalysis className="animate-fade-in" symbol={selectedStock} />
-            <MarketAnalysis symbol={selectedStock} />
-            <NewsIntegration symbol={selectedStock} />
-            <MarketScreener />
-            <CommunityDiscussion symbol={selectedStock} />
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <ChartLineUp className="w-5 h-5 text-blue-500" />
+                Market Analysis
+              </h2>
+              <StockChart className="animate-fade-in" symbol={selectedStock} />
+              <StockStats className="animate-fade-in [animation-delay:200ms]" symbol={selectedStock} />
+              <TechnicalAnalysis className="animate-fade-in" symbol={selectedStock} />
+              <MarketAnalysis symbol={selectedStock} />
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <Brain className="w-5 h-5 text-green-500" />
+                AI Insights
+              </h2>
+              <MarketSentiment />
+              <MarketScreener />
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-yellow-500" />
+                Market Events
+              </h2>
+              <NewsIntegration symbol={selectedStock} />
+              <EconomicCalendar />
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <Users className="w-5 h-5 text-purple-500" />
+                Community
+              </h2>
+              <CommunityDiscussion symbol={selectedStock} />
+            </div>
           </div>
+
+          {/* Sidebar - Portfolio & Personal Tools */}
           <div className="space-y-6">
-            <MarketSentiment />
-            <StockStats className="animate-fade-in [animation-delay:200ms]" symbol={selectedStock} />
-            <PortfolioSummary className="animate-fade-in [animation-delay:300ms]" />
-            <PortfolioManager className="animate-fade-in [animation-delay:400ms]" symbol={selectedStock} />
-            <RiskManagement symbol={selectedStock} />
-            <EconomicCalendar />
-            <FinancialPlanner />
-            <UserProfile />
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <Wallet className="w-5 h-5 text-orange-500" />
+                Portfolio Management
+              </h2>
+              <PortfolioSummary className="animate-fade-in [animation-delay:300ms]" />
+              <PortfolioManager className="animate-fade-in [animation-delay:400ms]" symbol={selectedStock} />
+              <RiskManagement symbol={selectedStock} />
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <Brain className="w-5 h-5 text-blue-500" />
+                Personal Tools
+              </h2>
+              <FinancialPlanner />
+              <UserProfile />
+            </div>
           </div>
         </div>
       </div>
