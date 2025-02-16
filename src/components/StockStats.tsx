@@ -4,6 +4,7 @@ import { Card } from './ui/card';
 import { Loader2, TrendingUp, TrendingDown } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface StockStatsProps {
   symbol: string;
@@ -12,18 +13,30 @@ interface StockStatsProps {
 
 export const StockStats = ({ symbol, className }: StockStatsProps) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: stockData, isLoading, error } = useQuery({
     queryKey: ['stock-stats', symbol],
     queryFn: async () => {
+      console.log('Fetching stock data for symbol:', symbol);
+      
       const { data: stock, error: stockError } = await supabase
         .from('stocks')
-        .select('id, company_name')
+        .select('id, company_name, symbol')
         .eq('symbol', symbol)
         .maybeSingle();
 
-      if (stockError) throw stockError;
-      if (!stock) throw new Error(`Stock ${symbol} not found`);
+      if (stockError) {
+        console.error('Error fetching stock data:', stockError);
+        throw new Error(`Failed to fetch stock data: ${stockError.message}`);
+      }
+      
+      if (!stock) {
+        console.error('Stock not found:', symbol);
+        throw new Error(`Stock ${symbol} not found in database`);
+      }
+
+      console.log('Found stock:', stock);
 
       const { data: latestPrice, error: priceError } = await supabase
         .from('stock_prices')
@@ -33,8 +46,17 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
         .limit(1)
         .maybeSingle();
 
-      if (priceError) throw priceError;
-      if (!latestPrice) throw new Error(`No price data available for ${symbol}`);
+      if (priceError) {
+        console.error('Error fetching price data:', priceError);
+        throw new Error(`Failed to fetch price data: ${priceError.message}`);
+      }
+
+      if (!latestPrice) {
+        console.error('No price data found for stock:', symbol);
+        throw new Error(`No price data available for ${symbol}`);
+      }
+
+      console.log('Found price data:', latestPrice);
 
       const priceChange = latestPrice.close_price - (latestPrice.previous_close_price || latestPrice.open_price);
       const percentageChange = ((priceChange / (latestPrice.previous_close_price || latestPrice.open_price)) * 100);
@@ -49,6 +71,7 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
         percentageChange,
       };
     },
+    retry: 1,
   });
 
   useEffect(() => {
@@ -63,16 +86,22 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
           filter: `stock_id=eq.${stockData?.id}`,
         },
         (payload) => {
-          console.log('Real-time update:', payload);
+          console.log('Real-time update received:', payload);
           queryClient.invalidateQueries({ queryKey: ['stock-stats', symbol] });
+          toast({
+            title: "Stock Price Updated",
+            description: `Latest data for ${symbol} has been updated`,
+            duration: 3000,
+          });
         }
       )
       .subscribe();
 
     return () => {
+      console.log('Cleaning up real-time subscription');
       supabase.removeChannel(channel);
     };
-  }, [symbol, stockData?.id, queryClient]);
+  }, [symbol, stockData?.id, queryClient, toast]);
 
   if (isLoading) {
     return (
@@ -85,6 +114,7 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
   }
 
   if (error) {
+    console.error('Error in StockStats component:', error);
     return (
       <Card className={`p-6 glass-card ${className}`}>
         <div className="space-y-2">
