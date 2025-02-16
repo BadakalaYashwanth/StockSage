@@ -18,7 +18,7 @@ import { NewsIntegration } from "@/components/NewsIntegration";
 import { MarketScreener } from "@/components/MarketScreener";
 import { useToast } from '@/hooks/use-toast';
 import { Button } from "@/components/ui/button";
-import { Activity, ChartLineUp, Wallet, Brain, Users, Calendar } from "lucide-react";
+import { Activity, ChartLine, Wallet, Brain, Users, Calendar } from "lucide-react";
 
 const Index = () => {
   const [selectedStock, setSelectedStock] = useState("AAPL");
@@ -64,7 +64,7 @@ const Index = () => {
           <div className="lg:col-span-2 space-y-6">
             <div className="space-y-6">
               <h2 className="text-xl font-semibold flex items-center gap-2">
-                <ChartLineUp className="w-5 h-5 text-blue-500" />
+                <ChartLine className="w-5 h-5 text-blue-500" />
                 Market Analysis
               </h2>
               <StockChart className="animate-fade-in" symbol={selectedStock} />
