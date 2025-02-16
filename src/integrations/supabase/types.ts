@@ -148,6 +148,7 @@ export type Database = {
           id: number
           low_price: number
           open_price: number
+          previous_close_price: number | null
           stock_id: number | null
           volume: number
         }
@@ -159,6 +160,7 @@ export type Database = {
           id?: number
           low_price: number
           open_price: number
+          previous_close_price?: number | null
           stock_id?: number | null
           volume: number
         }
@@ -170,6 +172,7 @@ export type Database = {
           id?: number
           low_price?: number
           open_price?: number
+          previous_close_price?: number | null
           stock_id?: number | null
           volume?: number
         }

@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { Card } from './ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, TrendingUp, TrendingDown } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -36,12 +36,17 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
       if (priceError) throw priceError;
       if (!latestPrice) throw new Error(`No price data available for ${symbol}`);
 
+      const priceChange = latestPrice.close_price - (latestPrice.previous_close_price || latestPrice.open_price);
+      const percentageChange = ((priceChange / (latestPrice.previous_close_price || latestPrice.open_price)) * 100);
+
       return {
         ...stock,
         currentPrice: latestPrice.close_price,
         dayHigh: latestPrice.high_price,
         dayLow: latestPrice.low_price,
         volume: latestPrice.volume,
+        priceChange,
+        percentageChange,
       };
     },
   });
@@ -102,6 +107,15 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold">${stockData?.currentPrice.toFixed(2)}</div>
+            <div className={`flex items-center gap-1 text-sm ${stockData?.priceChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              {stockData?.priceChange >= 0 ? (
+                <TrendingUp className="w-4 h-4" />
+              ) : (
+                <TrendingDown className="w-4 h-4" />
+              )}
+              <span>${Math.abs(stockData?.priceChange).toFixed(2)}</span>
+              <span>({stockData?.percentageChange.toFixed(2)}%)</span>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
