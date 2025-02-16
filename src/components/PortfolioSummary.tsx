@@ -1,10 +1,10 @@
 
 import React, { useEffect } from 'react';
 import { Card } from './ui/card';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/lib/auth';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { Loader2 } from 'lucide-react';
 
 export const PortfolioSummary = ({ className }: { className?: string }) => {
   const { session } = useAuth();
@@ -61,7 +61,7 @@ export const PortfolioSummary = ({ className }: { className?: string }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [session?.user.id]);
+  }, [session?.user.id, queryClient]);
 
   if (!session) {
     return null;
@@ -71,7 +71,7 @@ export const PortfolioSummary = ({ className }: { className?: string }) => {
     return (
       <Card className={`p-6 glass-card ${className}`}>
         <div className="flex items-center justify-center h-32">
-          <ReloadIcon className="h-8 w-8 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       </Card>
     );

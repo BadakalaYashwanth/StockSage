@@ -1,8 +1,8 @@
 
 import React, { useEffect } from 'react';
 import { Card } from './ui/card';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 interface StockStatsProps {
@@ -11,6 +11,8 @@ interface StockStatsProps {
 }
 
 export const StockStats = ({ symbol, className }: StockStatsProps) => {
+  const queryClient = useQueryClient();
+
   const { data: stockData, isLoading } = useQuery({
     queryKey: ['stock-stats', symbol],
     queryFn: async () => {
@@ -64,13 +66,13 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [symbol, stockData?.id]);
+  }, [symbol, stockData?.id, queryClient]);
 
   if (isLoading) {
     return (
       <Card className={`p-6 glass-card ${className}`}>
         <div className="flex items-center justify-center h-32">
-          <ReloadIcon className="h-8 w-8 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       </Card>
     );
