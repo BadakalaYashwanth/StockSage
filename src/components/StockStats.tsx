@@ -57,7 +57,6 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
         },
         (payload) => {
           console.log('Real-time update:', payload);
-          // Invalidate the query to refresh the data
           queryClient.invalidateQueries({ queryKey: ['stock-stats', symbol] });
         }
       )
