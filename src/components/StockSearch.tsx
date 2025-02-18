@@ -10,7 +10,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandLoading,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -92,11 +91,9 @@ export function StockSearch({ onSelect }: StockSearchProps) {
           <CommandList>
             <CommandEmpty>No stock found.</CommandEmpty>
             {isLoading && (
-              <CommandLoading>
-                <div className="flex items-center justify-center py-4">
-                  Searching stocks...
-                </div>
-              </CommandLoading>
+              <div className="flex items-center justify-center py-4 text-sm text-slate-400">
+                Searching stocks...
+              </div>
             )}
             <CommandGroup>
               {stocks?.map((stock) => (
