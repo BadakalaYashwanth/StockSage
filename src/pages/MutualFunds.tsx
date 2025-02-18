@@ -1,36 +1,34 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MutualFundSearch, FundFilters } from '@/components/mutual-funds/MutualFundSearch';
+import { MutualFundSearch } from '@/components/mutual-funds/MutualFundSearch';
 import { FundPerformance } from '@/components/mutual-funds/FundPerformance';
 import { FundComposition } from '@/components/mutual-funds/FundComposition';
 import { SIPCalculator } from '@/components/mutual-funds/SIPCalculator';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import type { MutualFund, FundFilters } from '@/components/mutual-funds/types';
 
 const MutualFunds = () => {
-  const [selectedFund, setSelectedFund] = useState<string | null>(null);
+  const [selectedFund, setSelectedFund] = useState<MutualFund | null>(null);
   const { toast } = useToast();
 
   const handleSearch = (query: string) => {
     if (query.length > 2) {
       console.log('Searching for funds:', query);
-      // Simulate fund search - will be replaced with actual API call
-      setSelectedFund('HDFC001');
-      toast({
-        title: "Fund Found",
-        description: "Loading fund details...",
-        duration: 2000,
-      });
     }
   };
 
   const handleFilterChange = (filters: FundFilters) => {
     console.log('Applying filters:', filters);
+  };
+
+  const handleFundSelect = (fund: MutualFund) => {
+    setSelectedFund(fund);
     toast({
-      title: "Filters Applied",
-      description: "Updating fund list...",
+      title: "Fund Selected",
+      description: `Loading details for ${fund.fund_name}...`,
       duration: 2000,
     });
   };
@@ -60,11 +58,12 @@ const MutualFunds = () => {
             <MutualFundSearch
               onSearch={handleSearch}
               onFilterChange={handleFilterChange}
+              onFundSelect={handleFundSelect}
             />
             {selectedFund && (
               <>
-                <FundPerformance fundId={selectedFund} />
-                <FundComposition fundId={selectedFund} />
+                <FundPerformance fundId={selectedFund.id} />
+                <FundComposition fundId={selectedFund.id} />
               </>
             )}
           </div>

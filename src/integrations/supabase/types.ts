@@ -36,6 +36,150 @@ export type Database = {
         }
         Relationships: []
       }
+      fund_composition: {
+        Row: {
+          asset_type: string
+          created_at: string | null
+          date: string
+          fund_id: number | null
+          id: number
+          percentage: number
+        }
+        Insert: {
+          asset_type: string
+          created_at?: string | null
+          date: string
+          fund_id?: number | null
+          id?: never
+          percentage: number
+        }
+        Update: {
+          asset_type?: string
+          created_at?: string | null
+          date?: string
+          fund_id?: number | null
+          id?: never
+          percentage?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_composition_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fund_holdings: {
+        Row: {
+          created_at: string | null
+          date: string
+          fund_id: number | null
+          id: number
+          percentage: number
+          sector: string | null
+          security_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          date: string
+          fund_id?: number | null
+          id?: never
+          percentage: number
+          sector?: string | null
+          security_name: string
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          fund_id?: number | null
+          id?: never
+          percentage?: number
+          sector?: string | null
+          security_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_holdings_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fund_performance: {
+        Row: {
+          benchmark_value: number | null
+          created_at: string | null
+          date: string
+          fund_id: number | null
+          id: number
+          nav: number
+        }
+        Insert: {
+          benchmark_value?: number | null
+          created_at?: string | null
+          date: string
+          fund_id?: number | null
+          id?: never
+          nav: number
+        }
+        Update: {
+          benchmark_value?: number | null
+          created_at?: string | null
+          date?: string
+          fund_id?: number | null
+          id?: never
+          nav?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_performance_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mutual_funds: {
+        Row: {
+          category: string
+          created_at: string | null
+          expense_ratio: number | null
+          fund_house: string
+          fund_name: string
+          fund_size: number
+          id: number
+          launch_date: string | null
+          risk_level: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          expense_ratio?: number | null
+          fund_house: string
+          fund_name: string
+          fund_size?: number
+          id?: never
+          launch_date?: string | null
+          risk_level: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          expense_ratio?: number | null
+          fund_house?: string
+          fund_name?: string
+          fund_size?: number
+          id?: never
+          launch_date?: string | null
+          risk_level?: string
+        }
+        Relationships: []
+      }
       portfolio: {
         Row: {
           average_price: number
@@ -242,6 +386,50 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      user_investments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          fund_id: number | null
+          id: number
+          investment_date: string
+          investment_type: string
+          nav_at_investment: number
+          units: number
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          fund_id?: number | null
+          id?: never
+          investment_date: string
+          investment_type: string
+          nav_at_investment: number
+          units: number
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          fund_id?: number | null
+          id?: never
+          investment_date?: string
+          investment_type?: string
+          nav_at_investment?: number
+          units?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_investments_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       watchlist: {
         Row: {
