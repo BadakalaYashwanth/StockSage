@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MutualFundSearch } from '@/components/mutual-funds/MutualFundSearch';
+import { MutualFundSearch, FundFilters } from '@/components/mutual-funds/MutualFundSearch';
 import { FundPerformance } from '@/components/mutual-funds/FundPerformance';
 import { FundComposition } from '@/components/mutual-funds/FundComposition';
 import { SIPCalculator } from '@/components/mutual-funds/SIPCalculator';
@@ -14,8 +14,9 @@ const MutualFunds = () => {
   const { toast } = useToast();
 
   const handleSearch = (query: string) => {
-    // Simulate fund search
     if (query.length > 2) {
+      console.log('Searching for funds:', query);
+      // Simulate fund search - will be replaced with actual API call
       setSelectedFund('HDFC001');
       toast({
         title: "Fund Found",
@@ -25,8 +26,8 @@ const MutualFunds = () => {
     }
   };
 
-  const handleFilterChange = (filters: any) => {
-    console.log('Filters changed:', filters);
+  const handleFilterChange = (filters: FundFilters) => {
+    console.log('Applying filters:', filters);
     toast({
       title: "Filters Applied",
       description: "Updating fund list...",
