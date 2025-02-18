@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { TrendingUp, UserCheck, Activity } from 'lucide-react';
 
 interface FundPerformanceProps {
-  fundId: string;
+  fundId: number;  // Changed from string to number
 }
 
 export const FundPerformance = ({ fundId }: FundPerformanceProps) => {
