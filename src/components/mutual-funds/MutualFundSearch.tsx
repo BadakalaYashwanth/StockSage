@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -41,17 +40,17 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
           .from('mutual_funds')
           .select(`
             *,
-            fund_performance!inner (
+            fund_performance (
               nav,
               date,
               benchmark_value
             ),
-            fund_composition!inner (
+            fund_composition (
               asset_type,
               percentage,
               date
             ),
-            fund_metrics!inner (
+            fund_metrics (
               returns_1y,
               returns_3y,
               returns_5y,
@@ -74,12 +73,6 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
         }
         if (filters.max_fund_size) {
           query = query.lte('fund_size', filters.max_fund_size);
-        }
-        if (filters.min_returns_1y) {
-          query = query.gte('fund_metrics.returns_1y', filters.min_returns_1y);
-        }
-        if (filters.max_returns_1y) {
-          query = query.lte('fund_metrics.returns_1y', filters.max_returns_1y);
         }
         if (searchQuery) {
           query = query.or(

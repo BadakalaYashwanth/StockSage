@@ -1,10 +1,9 @@
-
 export interface MutualFund {
   id: number;
   fund_house: string;
   fund_name: string;
   category: string;
-  risk_level: 'Low' | 'Medium' | 'High';
+  risk_level: string;
   fund_size: number;
   launch_date: string | null;
   expense_ratio: number | null;
@@ -14,6 +13,23 @@ export interface MutualFund {
   standard_deviation: number | null;
   tracking_error: number | null;
   created_at: string;
+  fund_performance?: {
+    nav: number;
+    date: string;
+    benchmark_value: number | null;
+  }[];
+  fund_composition?: {
+    asset_type: string;
+    percentage: number;
+    date: string;
+  }[];
+  fund_metrics?: {
+    returns_1y: number;
+    returns_3y: number;
+    returns_5y: number;
+    risk_score: number;
+    volatility: number;
+  }[];
 }
 
 export interface FundMetrics {
