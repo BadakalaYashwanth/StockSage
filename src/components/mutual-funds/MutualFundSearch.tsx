@@ -4,18 +4,20 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, Filter, ChevronDown } from 'lucide-react';
+import { Search, Filter, ChevronDown, Bell } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './components/SearchFilters';
 import { MutualFundCard } from './components/MutualFundCard';
-import type { MutualFund, FundFilters } from './types';
+import { AlertDialog } from './components/AlertDialog';
+import type { MutualFund, FundFilters, FundAlert } from './types';
 
 interface MutualFundSearchProps {
   onSearch: (query: string) => void;
@@ -27,6 +29,8 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FundFilters>({});
+  const [selectedFund, setSelectedFund] = useState<MutualFund | null>(null);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const { data: funds, isLoading } = useQuery({
@@ -46,6 +50,13 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
               asset_type,
               percentage,
               date
+            ),
+            fund_metrics!inner (
+              returns_1y,
+              returns_3y,
+              returns_5y,
+              risk_score,
+              volatility
             )
           `);
 
@@ -64,6 +75,12 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
         if (filters.max_fund_size) {
           query = query.lte('fund_size', filters.max_fund_size);
         }
+        if (filters.min_returns_1y) {
+          query = query.gte('fund_metrics.returns_1y', filters.min_returns_1y);
+        }
+        if (filters.max_returns_1y) {
+          query = query.lte('fund_metrics.returns_1y', filters.max_returns_1y);
+        }
         if (searchQuery) {
           query = query.or(
             `fund_name.ilike.%${searchQuery}%,fund_house.ilike.%${searchQuery}%`
@@ -72,10 +89,7 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
 
         const { data, error } = await query;
         if (error) throw error;
-        return data as (MutualFund & {
-          fund_performance: Array<{ nav: number; date: string; benchmark_value: number }>;
-          fund_composition: Array<{ asset_type: string; percentage: number; date: string }>;
-        })[];
+        return data as MutualFund[];
       } catch (error) {
         console.error('Error fetching funds:', error);
         toast({
@@ -87,6 +101,32 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
       }
     },
   });
+
+  const handleSetAlert = async (alert: Omit<FundAlert, 'id' | 'is_triggered'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('fund_alerts')
+        .insert([alert])
+        .select();
+
+      if (error) throw error;
+
+      toast({
+        title: "Alert Created",
+        description: "You will be notified when the conditions are met.",
+        duration: 3000,
+      });
+
+      setIsAlertDialogOpen(false);
+    } catch (error) {
+      console.error('Error creating alert:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create alert. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleFilterChange = (key: keyof FundFilters, value: any) => {
     const newFilters = { ...filters, [key]: value };
@@ -124,6 +164,26 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
             Filters
             <ChevronDown className={`w-4 h-4 transition-transform ${isFiltersOpen ? 'rotate-180' : ''}`} />
           </Button>
+          {selectedFund && (
+            <Dialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <Bell className="w-4 h-4" />
+                  Set Alert
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Set Alert for {selectedFund.fund_name}</DialogTitle>
+                </DialogHeader>
+                <AlertDialog
+                  fund={selectedFund}
+                  onSubmit={handleSetAlert}
+                  onCancel={() => setIsAlertDialogOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
 
         <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
@@ -143,7 +203,10 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
                 <MutualFundCard
                   key={fund.id}
                   fund={fund}
-                  onClick={onFundSelect}
+                  onClick={(fund) => {
+                    setSelectedFund(fund);
+                    onFundSelect(fund);
+                  }}
                 />
               ))}
             </div>

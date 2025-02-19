@@ -36,6 +36,92 @@ export type Database = {
         }
         Relationships: []
       }
+      fund_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string | null
+          fund_id: number | null
+          id: number
+          is_triggered: boolean | null
+          threshold: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string | null
+          fund_id?: number | null
+          id?: never
+          is_triggered?: boolean | null
+          threshold: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string | null
+          fund_id?: number | null
+          id?: never
+          is_triggered?: boolean | null
+          threshold?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_alerts_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fund_comparisons: {
+        Row: {
+          base_fund_id: number | null
+          compare_fund_id: number | null
+          correlation: number | null
+          created_at: string | null
+          id: number
+          performance_diff_1y: number | null
+          risk_diff: number | null
+        }
+        Insert: {
+          base_fund_id?: number | null
+          compare_fund_id?: number | null
+          correlation?: number | null
+          created_at?: string | null
+          id?: never
+          performance_diff_1y?: number | null
+          risk_diff?: number | null
+        }
+        Update: {
+          base_fund_id?: number | null
+          compare_fund_id?: number | null
+          correlation?: number | null
+          created_at?: string | null
+          id?: never
+          performance_diff_1y?: number | null
+          risk_diff?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_comparisons_base_fund_id_fkey"
+            columns: ["base_fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_comparisons_compare_fund_id_fkey"
+            columns: ["compare_fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fund_composition: {
         Row: {
           asset_type: string
@@ -109,6 +195,50 @@ export type Database = {
           },
         ]
       }
+      fund_metrics: {
+        Row: {
+          created_at: string | null
+          date: string
+          fund_id: number | null
+          id: number
+          returns_1y: number | null
+          returns_3y: number | null
+          returns_5y: number | null
+          risk_score: number | null
+          volatility: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          date: string
+          fund_id?: number | null
+          id?: never
+          returns_1y?: number | null
+          returns_3y?: number | null
+          returns_5y?: number | null
+          risk_score?: number | null
+          volatility?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          fund_id?: number | null
+          id?: never
+          returns_1y?: number | null
+          returns_3y?: number | null
+          returns_5y?: number | null
+          risk_score?: number | null
+          volatility?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_metrics_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "mutual_funds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fund_performance: {
         Row: {
           benchmark_value: number | null
@@ -146,6 +276,8 @@ export type Database = {
       }
       mutual_funds: {
         Row: {
+          alpha: number | null
+          beta: number | null
           category: string
           created_at: string | null
           expense_ratio: number | null
@@ -155,8 +287,13 @@ export type Database = {
           id: number
           launch_date: string | null
           risk_level: string
+          sharpe_ratio: number | null
+          standard_deviation: number | null
+          tracking_error: number | null
         }
         Insert: {
+          alpha?: number | null
+          beta?: number | null
           category: string
           created_at?: string | null
           expense_ratio?: number | null
@@ -166,8 +303,13 @@ export type Database = {
           id?: never
           launch_date?: string | null
           risk_level: string
+          sharpe_ratio?: number | null
+          standard_deviation?: number | null
+          tracking_error?: number | null
         }
         Update: {
+          alpha?: number | null
+          beta?: number | null
           category?: string
           created_at?: string | null
           expense_ratio?: number | null
@@ -177,6 +319,9 @@ export type Database = {
           id?: never
           launch_date?: string | null
           risk_level?: string
+          sharpe_ratio?: number | null
+          standard_deviation?: number | null
+          tracking_error?: number | null
         }
         Relationships: []
       }
