@@ -4,14 +4,11 @@ import { TrendingUp, CircleDollarSign, BarChart3, Calendar } from 'lucide-react'
 import type { MutualFund } from '../types';
 
 interface MutualFundCardProps {
-  fund: MutualFund & {
-    fund_performance: Array<{ nav: number; date: string; benchmark_value: number }>;
-    fund_composition: Array<{ asset_type: string; percentage: number; date: string }>;
-  };
+  fund: MutualFund;
   onClick: (fund: MutualFund) => void;
 }
 
-const calculateReturns = (performances: Array<{ nav: number; date: string }>) => {
+const calculateReturns = (performances?: Array<{ nav: number; date: string }>) => {
   if (!performances || performances.length < 2) return 0;
   
   const sortedPerformances = [...performances].sort((a, b) => 
@@ -61,7 +58,7 @@ export const MutualFundCard = ({ fund, onClick }: MutualFundCardProps) => {
             <CircleDollarSign className="w-4 h-4 text-green-400" />
             <div>
               <p className="text-xs text-slate-400">Expense Ratio</p>
-              <p className="font-medium">{fund.expense_ratio}%</p>
+              <p className="font-medium">{fund.expense_ratio || 0}%</p>
             </div>
           </div>
 
@@ -78,22 +75,24 @@ export const MutualFundCard = ({ fund, onClick }: MutualFundCardProps) => {
             <div>
               <p className="text-xs text-slate-400">Launch Date</p>
               <p className="font-medium">
-                {new Date(fund.launch_date).toLocaleDateString()}
+                {fund.launch_date ? new Date(fund.launch_date).toLocaleDateString() : 'N/A'}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {fund.fund_composition.map((composition, index) => (
-            <span
-              key={index}
-              className="text-xs px-2 py-1 rounded-full bg-slate-700 text-slate-300"
-            >
-              {composition.asset_type}: {composition.percentage}%
-            </span>
-          ))}
-        </div>
+        {fund.fund_composition && fund.fund_composition.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {fund.fund_composition.map((composition, index) => (
+              <span
+                key={index}
+                className="text-xs px-2 py-1 rounded-full bg-slate-700 text-slate-300"
+              >
+                {composition.asset_type}: {composition.percentage}%
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
