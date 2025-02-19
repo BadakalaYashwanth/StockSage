@@ -20,42 +20,44 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
     queryFn: async () => {
       console.log('Fetching stock data for symbol:', symbol);
       
-      const { data: stock, error: stockError } = await supabase
+      // First find the stock
+      const { data: stocks, error: stockError } = await supabase
         .from('stocks')
         .select('id, company_name, symbol')
-        .eq('symbol', symbol)
-        .maybeSingle();
+        .eq('symbol', symbol);
 
       if (stockError) {
         console.error('Error fetching stock data:', stockError);
         throw new Error(`Failed to fetch stock data: ${stockError.message}`);
       }
       
-      if (!stock) {
+      if (!stocks || stocks.length === 0) {
         console.error('Stock not found:', symbol);
         throw new Error(`Stock ${symbol} not found in database`);
       }
 
+      const stock = stocks[0];
       console.log('Found stock:', stock);
 
-      const { data: latestPrice, error: priceError } = await supabase
+      // Then get its latest price
+      const { data: prices, error: priceError } = await supabase
         .from('stock_prices')
         .select('*')
         .eq('stock_id', stock.id)
         .order('date', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .limit(1);
 
       if (priceError) {
         console.error('Error fetching price data:', priceError);
         throw new Error(`Failed to fetch price data: ${priceError.message}`);
       }
 
-      if (!latestPrice) {
+      if (!prices || prices.length === 0) {
         console.error('No price data found for stock:', symbol);
         throw new Error(`No price data available for ${symbol}`);
       }
 
+      const latestPrice = prices[0];
       console.log('Found price data:', latestPrice);
 
       const priceChange = latestPrice.close_price - (latestPrice.previous_close_price || latestPrice.open_price);
