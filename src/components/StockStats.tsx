@@ -75,32 +75,34 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
   });
 
   useEffect(() => {
-    const channel = supabase
-      .channel('stock-price-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'stock_prices',
-          filter: `stock_id=eq.${stockData?.id}`,
-        },
-        (payload) => {
-          console.log('Real-time update received:', payload);
-          queryClient.invalidateQueries({ queryKey: ['stock-stats', symbol] });
-          toast({
-            title: "Stock Price Updated",
-            description: `Latest data for ${symbol} has been updated`,
-            duration: 3000,
-          });
-        }
-      )
-      .subscribe();
+    if (stockData?.id) {
+      const channel = supabase
+        .channel('stock-price-updates')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'stock_prices',
+            filter: `stock_id=eq.${stockData.id}`,
+          },
+          (payload) => {
+            console.log('Real-time update received:', payload);
+            queryClient.invalidateQueries({ queryKey: ['stock-stats', symbol] });
+            toast({
+              title: "Stock Price Updated",
+              description: `Latest data for ${symbol} has been updated`,
+              duration: 3000,
+            });
+          }
+        )
+        .subscribe();
 
-    return () => {
-      console.log('Cleaning up real-time subscription');
-      supabase.removeChannel(channel);
-    };
+      return () => {
+        console.log('Cleaning up real-time subscription');
+        supabase.removeChannel(channel);
+      };
+    }
   }, [symbol, stockData?.id, queryClient, toast]);
 
   if (isLoading) {
@@ -114,7 +116,6 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
   }
 
   if (error) {
-    console.error('Error in StockStats component:', error);
     return (
       <Card className={`p-6 glass-card ${className}`}>
         <div className="space-y-2">
@@ -127,40 +128,53 @@ export const StockStats = ({ symbol, className }: StockStatsProps) => {
     );
   }
 
+  if (!stockData) {
+    return (
+      <Card className={`p-6 glass-card ${className}`}>
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold text-yellow-500">No Data Available</h3>
+          <p className="text-sm text-slate-400">
+            No data available for symbol {symbol}
+          </p>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card className={`p-6 glass-card ${className}`}>
       <div className="space-y-4">
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-lg font-semibold">{symbol}</h3>
-            <p className="text-sm text-slate-400">{stockData?.company_name}</p>
+            <p className="text-sm text-slate-400">{stockData.company_name}</p>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold">${stockData?.currentPrice.toFixed(2)}</div>
-            <div className={`flex items-center gap-1 text-sm ${stockData?.priceChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              {stockData?.priceChange >= 0 ? (
+            <div className="text-2xl font-bold">${stockData.currentPrice.toFixed(2)}</div>
+            <div className={`flex items-center gap-1 text-sm ${stockData.priceChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              {stockData.priceChange >= 0 ? (
                 <TrendingUp className="w-4 h-4" />
               ) : (
                 <TrendingDown className="w-4 h-4" />
               )}
-              <span>${Math.abs(stockData?.priceChange).toFixed(2)}</span>
-              <span>({stockData?.percentageChange.toFixed(2)}%)</span>
+              <span>${Math.abs(stockData.priceChange).toFixed(2)}</span>
+              <span>({stockData.percentageChange.toFixed(2)}%)</span>
             </div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-slate-400">Day High</p>
-            <p className="text-lg font-semibold">${stockData?.dayHigh.toFixed(2)}</p>
+            <p className="text-lg font-semibold">${stockData.dayHigh.toFixed(2)}</p>
           </div>
           <div>
             <p className="text-sm text-slate-400">Day Low</p>
-            <p className="text-lg font-semibold">${stockData?.dayLow.toFixed(2)}</p>
+            <p className="text-lg font-semibold">${stockData.dayLow.toFixed(2)}</p>
           </div>
           <div>
             <p className="text-sm text-slate-400">Volume</p>
             <p className="text-lg font-semibold">
-              {stockData?.volume.toLocaleString()}
+              {stockData.volume.toLocaleString()}
             </p>
           </div>
         </div>
