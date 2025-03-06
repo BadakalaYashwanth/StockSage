@@ -1,69 +1,74 @@
-# Welcome to your Lovable project
 
-## Project info
+# FinTrack Pro - Financial Market Analytics Platform
 
-**URL**: https://lovable.dev/projects/221b3083-ebab-439f-8a1c-297110ea2bda
+## Project Overview
 
-## How can I edit this code?
+FinTrack Pro is a comprehensive financial analytics platform designed to help investors track, analyze, and make informed decisions about stocks and mutual funds. The application provides real-time market data, advanced analytics, and portfolio management tools in an intuitive interface.
 
-There are several ways of editing your application.
+## Key Features
 
-**Use Lovable**
+### Market Analysis
+- **Real-time Stock Tracking**: Monitor stock prices, volumes, and key metrics with interactive charts
+- **Technical Analysis**: Access to technical indicators and patterns for informed trading decisions
+- **Performance Statistics**: View detailed statistics and performance metrics for any stock
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/221b3083-ebab-439f-8a1c-297110ea2bda) and start prompting.
+### Mutual Funds
+- **Fund Discovery**: Search and filter mutual funds based on various criteria including fund house, category, risk level, and performance
+- **Performance Tracking**: Analyze historical performance with interactive visualizations
+- **Fund Composition**: View asset allocation and portfolio composition of mutual funds
+- **SIP Calculator**: Plan your systematic investments with a built-in calculator
 
-Changes made via Lovable will be committed automatically to this repo.
+### AI-Powered Insights
+- **Market Sentiment Analysis**: AI-driven analysis of market sentiment
+- **Stock Screening**: Intelligent stock screening and recommendations based on your preferences
+- **Risk Assessment**: Advanced risk evaluation for stocks and mutual funds
 
-**Use your preferred IDE**
+### Portfolio Management
+- **Portfolio Tracking**: Monitor your investment portfolio in one place
+- **Watchlists**: Create and manage watchlists for stocks and funds you're interested in
+- **Price Alerts**: Set up customizable alerts for price movements and fund performance
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Market Events & News
+- **Financial News Integration**: Stay updated with the latest market news
+- **Economic Calendar**: Keep track of important economic events and announcements
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Community Features
+- **Discussion Forums**: Engage with other investors to share insights
+- **Educational Resources**: Access learning materials about investing strategies
 
-Follow these steps:
+## Technology Stack
+
+FinTrack Pro is built using modern web technologies:
+
+- **Frontend**: React with TypeScript, offering type safety and enhanced developer experience
+- **UI Framework**: Tailwind CSS for responsive and customizable styling
+- **Component Library**: shadcn/ui for consistent and accessible UI components
+- **State Management**: React Query for efficient data fetching and cache management
+- **Charts and Visualizations**: Recharts for interactive financial charts
+- **Backend**: Supabase for authentication, database, and real-time functionality
+
+## Getting Started
+
+Follow these steps to get the application running locally:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repository
+git clone <repository-url>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navigate to the project directory
+cd fintrack-pro
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Future Enhancements
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/221b3083-ebab-439f-8a1c-297110ea2bda) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Portfolio optimization recommendations
+- Integration with brokerage APIs for direct trading
+- Advanced screeners for stocks and mutual funds
+- Social trading features
+- Mobile application for on-the-go tracking
