@@ -1,4 +1,4 @@
-
+StockSage
 # FinTrack Pro - Financial Market Analytics Platform
 
 ## Project Overview
