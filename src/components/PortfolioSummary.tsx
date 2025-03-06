@@ -6,6 +6,21 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/lib/auth';
 import { Loader2 } from 'lucide-react';
 
+// Define the correct types for portfolio data
+interface PortfolioPosition {
+  quantity: number;
+  average_price: number;
+  stocks: {
+    symbol: string;
+    company_name: string;
+  };
+}
+
+interface PortfolioData {
+  positions: PortfolioPosition[];
+  totalValue: number;
+}
+
 export const PortfolioSummary = ({ className }: { className?: string }) => {
   const { session } = useAuth();
   const queryClient = useQueryClient();
@@ -35,7 +50,7 @@ export const PortfolioSummary = ({ className }: { className?: string }) => {
       return {
         positions: portfolio,
         totalValue,
-      };
+      } as PortfolioData;
     },
     enabled: !!session,
   });
