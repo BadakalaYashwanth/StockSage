@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select';
 import type { MutualFund, FundAlert } from '../types';
 import { useAuth } from '@/lib/auth';
+import { useToast } from '@/hooks/use-toast';
 
 interface AlertDialogProps {
   fund: MutualFund;
@@ -22,13 +23,18 @@ export const AlertDialog = ({ fund, onSubmit, onCancel }: AlertDialogProps) => {
   const [alertType, setAlertType] = useState<FundAlert['alert_type']>('NAV_CHANGE');
   const [threshold, setThreshold] = useState('');
   const { session } = useAuth();
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Check if user is authenticated
     if (!session?.user?.id) {
-      console.error("User must be authenticated to create alerts");
+      toast({
+        title: "Authentication Required",
+        description: "You must be logged in to create alerts",
+        variant: "destructive"
+      });
       return;
     }
     

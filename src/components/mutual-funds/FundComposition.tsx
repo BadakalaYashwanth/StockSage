@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { PieChart, BarChart, Briefcase } from 'lucide-react';
 
 interface FundCompositionProps {
-  fundId: number;  // Changed from string to number
+  fundId: string;  // Changed from number to string
 }
 
 export const FundComposition = ({ fundId }: FundCompositionProps) => {
