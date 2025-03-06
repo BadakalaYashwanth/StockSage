@@ -1,5 +1,6 @@
+
 export interface MutualFund {
-  id: number;
+  id: string;
   fund_house: string;
   fund_name: string;
   category: string;
@@ -33,8 +34,8 @@ export interface MutualFund {
 }
 
 export interface FundMetrics {
-  id: number;
-  fund_id: number;
+  id: string;
+  fund_id: string;
   date: string;
   returns_1y: number;
   returns_3y: number;
@@ -44,17 +45,18 @@ export interface FundMetrics {
 }
 
 export interface FundComparison {
-  id: number;
-  base_fund_id: number;
-  compare_fund_id: number;
+  id: string;
+  base_fund_id: string;
+  compare_fund_id: string;
   correlation: number;
   performance_diff_1y: number;
   risk_diff: number;
 }
 
 export interface FundAlert {
-  id: number;
-  fund_id: number;
+  id: string;
+  fund_id: string;
+  user_id: string;
   alert_type: 'NAV_CHANGE' | 'PERFORMANCE' | 'RISK';
   threshold: number;
   is_triggered: boolean;

@@ -24,10 +24,10 @@ interface StockSearchProps {
 }
 
 interface Stock {
-  id: number;
+  id: string;
   symbol: string;
   company_name: string;
-  sector: string;
+  sector: string | null;
 }
 
 export function StockSearch({ onSelect }: StockSearchProps) {

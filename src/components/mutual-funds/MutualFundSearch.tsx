@@ -98,9 +98,26 @@ export const MutualFundSearch = ({ onSearch, onFilterChange, onFundSelect }: Mut
 
   const handleSetAlert = async (alert: Omit<FundAlert, 'id' | 'is_triggered'>) => {
     try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to set alerts.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const alertWithUserId = {
+        ...alert,
+        user_id: user.id
+      };
+      
       const { data, error } = await supabase
         .from('fund_alerts')
-        .insert([alert])
+        .insert([alertWithUserId])
         .select();
 
       if (error) throw error;
