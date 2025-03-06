@@ -1,7 +1,7 @@
 StockSage
 # FinTrack Pro - Financial Market Analytics Platform
 
-# StockSage URL: https://startling-piroshki-342345.netlify.app/
+- **StockSage URL: https://startling-piroshki-342345.netlify.app/
 ## Project Overview
 
 FinTrack Pro is a comprehensive financial analytics platform designed to help investors track, analyze, and make informed decisions about stocks and mutual funds. The application provides real-time market data, advanced analytics, and portfolio management tools in an intuitive interface.
