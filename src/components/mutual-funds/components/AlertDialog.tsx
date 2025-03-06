@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { MutualFund, FundAlert } from '../types';
+import { useAuth } from '@/lib/auth';
 
 interface AlertDialogProps {
   fund: MutualFund;
@@ -20,11 +21,20 @@ interface AlertDialogProps {
 export const AlertDialog = ({ fund, onSubmit, onCancel }: AlertDialogProps) => {
   const [alertType, setAlertType] = useState<FundAlert['alert_type']>('NAV_CHANGE');
   const [threshold, setThreshold] = useState('');
+  const { session } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check if user is authenticated
+    if (!session?.user?.id) {
+      console.error("User must be authenticated to create alerts");
+      return;
+    }
+    
     onSubmit({
       fund_id: fund.id,
+      user_id: session.user.id,
       alert_type: alertType,
       threshold: parseFloat(threshold),
     });
