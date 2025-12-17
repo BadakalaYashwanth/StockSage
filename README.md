@@ -1,5 +1,5 @@
 StockSage
-# FinTrack Pro - Financial Market Analytics Platform
+# StockSage - Financial Market Analytics Platform
 
 - StockSage URL: https://startling-piroshki-342345.netlify.app/
 ## Project Overview
